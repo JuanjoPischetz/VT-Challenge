@@ -9,7 +9,7 @@ export const User = sequelize.define('user',{
         primaryKey:true
     },
 
-    name : {
+    userName : {
         type: DataTypes.STRING,
         unique: true,
         allowNull:false

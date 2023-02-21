@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { getList } from "../controllers/list.controller";
+import { deleteTask, getList, postTask, updateTask } from "../controllers/list.controller";
+import { validateToken } from "../controllers/validateToken.controller";
 
 const router = Router();
 
-router.get('/', getList)
+router.get('/',validateToken ,getList)
+router.post('/',validateToken ,postTask)
+router.put('/',validateToken ,updateTask)
+router.delete('/',validateToken ,deleteTask)
+
 
 export default router;

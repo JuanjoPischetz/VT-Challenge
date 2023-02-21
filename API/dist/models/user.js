@@ -12,7 +12,7 @@ exports.User = connection_1.default.define('user', {
         defaultValue: sequelize_1.DataTypes.UUIDV4,
         primaryKey: true
     },
-    name: {
+    userName: {
         type: sequelize_1.DataTypes.STRING,
         unique: true,
         allowNull: false

@@ -2,7 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const user_controller_1 = require("../controllers/user.controller");
+const validateToken_controller_1 = require("../controllers/validateToken.controller");
 const router = (0, express_1.Router)();
 router.post('/', user_controller_1.newUser);
 router.post('/login', user_controller_1.loginUser);
+router.get('/', user_controller_1.testName);
+router.get('/admin', validateToken_controller_1.validateToken, user_controller_1.getUserList);
 exports.default = router;

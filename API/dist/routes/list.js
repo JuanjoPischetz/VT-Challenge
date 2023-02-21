@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const list_controller_1 = require("../controllers/list.controller");
+const validateToken_controller_1 = require("../controllers/validateToken.controller");
 const router = (0, express_1.Router)();
-router.get('/', list_controller_1.getList);
+router.get('/', validateToken_controller_1.validateToken, list_controller_1.getList);
+router.post('/', validateToken_controller_1.validateToken, list_controller_1.postTask);
+router.put('/', validateToken_controller_1.validateToken, list_controller_1.updateTask);
+router.delete('/', validateToken_controller_1.validateToken, list_controller_1.deleteTask);
 exports.default = router;
