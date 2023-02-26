@@ -3,6 +3,7 @@ import { User } from "../models/user";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { List } from "../models/list";
+import { TranslateCheck } from "../models/traslatecheck";
 
 export const newUser = async (req:Request, res:Response) =>{
 
@@ -83,21 +84,53 @@ export const getUserList = async  (req:Request,res:Response)=>{
     
     if (headerToken !== undefined){
         const bearerToken = headerToken.slice(7);
-        const roleCheck  = jwt.decode(bearerToken)
-
-        try {  
-            const userList  = await User.findAll({include : {
-                model:List,
-                attributes: ["title"]
-            }});
-            if (userList.length !== 0){
-                return res.status(200).send(userList)
+        const roleCheck:any  = jwt.decode(bearerToken)
+        if(roleCheck.role === "admin"){
+            try {  
+                const userList  = await User.findAll({include : [{
+                    model:List,
+                    attributes: ["title"]
+                },
+                {
+                    model: TranslateCheck,
+                    attributes:["translatedFlag"]
+                }
+                ]});
+                if (userList.length !== 0){
+                    return res.status(200).send(userList)
+                }
+                else return res.status(404).json({msg:"Theres no user in database"})
+            } catch (error:any) {
+                console.log(error.message)
+                return res.status(500).send("server goes wrong")
             }
-            else return res.status(404).json({msg:"Theres no user in database"})
-        } catch (error:any) {
-            console.log(error.message)
-            return res.status(500).send("server goes wrong")
         }
+
+        else return res.status(404).json({msg:"unhautorized"})
     }
     else return res.status(404).send("Token invalid")
+}
+
+
+export const translateUpdate = async (req:Request, res:Response)=>{
+    const {userName} = req.body
+
+    try {
+        
+        const user = await User.findOne({
+            where : {
+                userName
+            }
+        });
+        if(user){
+            await TranslateCheck.update({translatedFlag : true},{
+                where : {
+                    userId : user.id
+                }
+            })
+        }
+
+    } catch (error) {
+        
+    }
 }

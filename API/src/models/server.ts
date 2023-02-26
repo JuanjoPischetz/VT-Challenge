@@ -4,6 +4,7 @@ import routesList from '../routes/list';
 import routesUser from '../routes/user';
 import { User } from './user';
 import { List } from './list';
+import { TranslateCheck } from './traslatecheck';
 
 class Server{
     private app: express.Application;
@@ -37,6 +38,8 @@ class Server{
         try {
             User.hasMany(List);
             List.belongsTo(User);
+            User.hasOne(TranslateCheck);
+            TranslateCheck.belongsto(User);
             await sequelize.sync({force: true})
             console.log('Successfull')
         } catch (error) {

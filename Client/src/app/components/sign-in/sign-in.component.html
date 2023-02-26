@@ -1,0 +1,20 @@
+<div class="body">
+    <img src="../../../assets/images/new-user.png" alt="Log Ing" class="img" width="35%">
+    <h1>New User</h1>
+    <form [formGroup]="signInForm" (ngSubmit)="login()">
+    <mat-form-field appearance="fill" class="field">
+        <mat-label for="userName">User Name</mat-label>
+        <input id="userName" formControlName="userName" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="field">
+        <mat-label for="password" >Password</mat-label>
+        <input id="password" type="password" formControlName="password" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="field">
+        <mat-label for="repeatPassword" >Repeat Password</mat-label>
+        <input id="repeatPassword" type="password" formControlName="repeatPassword" matInput>
+    </mat-form-field>
+    <button mat-raised-button color="primary" class="button"
+     type="submit" [disabled]="signInForm.invalid">Create</button>
+    </form> 
+</div>

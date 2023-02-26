@@ -90,21 +90,25 @@ const getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     if (headerToken !== undefined) {
         const bearerToken = headerToken.slice(7);
         const roleCheck = jsonwebtoken_1.default.decode(bearerToken);
-        try {
-            const userList = yield user_1.User.findAll({ include: {
-                    model: list_1.List,
-                    attributes: ["title"]
-                } });
-            if (userList.length !== 0) {
-                return res.status(200).send(userList);
+        if (roleCheck.role === "admin") {
+            try {
+                const userList = yield user_1.User.findAll({ include: {
+                        model: list_1.List,
+                        attributes: ["title"]
+                    } });
+                if (userList.length !== 0) {
+                    return res.status(200).send(userList);
+                }
+                else
+                    return res.status(404).json({ msg: "Theres no user in database" });
             }
-            else
-                return res.status(404).json({ msg: "Theres no user in database" });
+            catch (error) {
+                console.log(error.message);
+                return res.status(500).send("server goes wrong");
+            }
         }
-        catch (error) {
-            console.log(error.message);
-            return res.status(500).send("server goes wrong");
-        }
+        else
+            return res.status(404).json({ msg: "unhautorized" });
     }
     else
         return res.status(404).send("Token invalid");

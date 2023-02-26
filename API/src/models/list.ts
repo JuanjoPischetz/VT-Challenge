@@ -13,6 +13,11 @@ export const List = sequelize.define('list', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
 
+    },
+
+    show : {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
 
 })
