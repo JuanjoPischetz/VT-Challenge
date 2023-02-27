@@ -15,5 +15,13 @@ exports.List = connection_1.default.define('list', {
         type: sequelize_1.DataTypes.UUID,
         defaultValue: sequelize_1.DataTypes.UUIDV4,
         primaryKey: true,
+    },
+    show: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    done: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: true
     }
-});
+}, { timeStamp: false });

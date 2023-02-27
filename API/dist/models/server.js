@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const connection_1 = __importDefault(require("../db/connection"));
+const cors_1 = __importDefault(require("cors"));
 const list_1 = __importDefault(require("../routes/list"));
 const user_1 = __importDefault(require("../routes/user"));
 const user_2 = require("./user");
 const list_2 = require("./list");
+const traslatecheck_1 = require("./traslatecheck");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -38,13 +40,16 @@ class Server {
     }
     middlewares() {
         this.app.use(express_1.default.json());
+        this.app.use((0, cors_1.default)());
     }
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 user_2.User.hasMany(list_2.List);
                 list_2.List.belongsTo(user_2.User);
-                yield connection_1.default.sync({ force: true });
+                user_2.User.hasOne(traslatecheck_1.TranslateCheck);
+                traslatecheck_1.TranslateCheck.belongsTo(user_2.User);
+                yield connection_1.default.sync({ alter: true });
                 console.log('Successfull');
             }
             catch (error) {

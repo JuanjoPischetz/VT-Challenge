@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ListService } from 'src/app/services/list.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,5 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
+
+    constructor (private _ListService : ListService){}
+
+    ngOnInit():void{
+      this.getList();
+    }
+
+    getList(){
+      const userId : string = localStorage.getItem('token') || ''
+      this._ListService.getList().subscribe(data =>{
+        console.log(data)
+      })
+    }
 
 }

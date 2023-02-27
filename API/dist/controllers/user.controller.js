@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserList = exports.testName = exports.loginUser = exports.newUser = void 0;
+exports.translateUpdate = exports.getUserList = exports.testName = exports.loginUser = exports.newUser = void 0;
 const user_1 = require("../models/user");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const list_1 = require("../models/list");
+const traslatecheck_1 = require("../models/traslatecheck");
 const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userName, password, role } = req.body;
     try {
@@ -32,7 +33,7 @@ const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         console.log(error.message);
-        return res.status(400).send("Name already exist.");
+        return res.status(400).json({ msg: 'User Name already taken, please choose different one' });
     }
 });
 exports.newUser = newUser;
@@ -46,22 +47,23 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
         if (!user) {
-            return res.status(400).json({ msg: `Username ${userName} not exist in our database` });
+            return res.status(400).json({ msg: `Username ${userName} do not exist in our database` });
         }
         //Validate password
         const passwordOk = yield bcrypt_1.default.compare(password, user.password);
         if (!passwordOk)
-            return res.status(400).json({ msg: "invalid password" });
+            return res.status(400).json({ msg: "This password is incorrect!" });
         //Generate token
         const token = jsonwebtoken_1.default.sign({
             userName,
-            role: user.role
+            role: user.role,
+            userId: user.id
         }, process.env.SECRET_KEY || "pepito flores");
-        return res.status(200).json({ token });
+        return res.status(200).json(token);
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send('Server not responding');
+        return res.status(500).json({ msg: 'Server not responding' });
     }
 });
 exports.loginUser = loginUser;
@@ -81,7 +83,7 @@ const testName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send('Server not responding');
+        return res.status(500).json({ msg: 'Server not responding' });
     }
 });
 exports.testName = testName;
@@ -92,10 +94,15 @@ const getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const roleCheck = jsonwebtoken_1.default.decode(bearerToken);
         if (roleCheck.role === "admin") {
             try {
-                const userList = yield user_1.User.findAll({ include: {
-                        model: list_1.List,
-                        attributes: ["title"]
-                    } });
+                const userList = yield user_1.User.findAll({ include: [{
+                            model: list_1.List,
+                            attributes: ["title"]
+                        },
+                        {
+                            model: traslatecheck_1.TranslateCheck,
+                            attributes: ["translatedFlag"]
+                        }
+                    ] });
                 if (userList.length !== 0) {
                     return res.status(200).send(userList);
                 }
@@ -104,13 +111,34 @@ const getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             }
             catch (error) {
                 console.log(error.message);
-                return res.status(500).send("server goes wrong");
+                return res.status(500).json({ msg: 'Server not responding' });
             }
         }
         else
             return res.status(404).json({ msg: "unhautorized" });
     }
     else
-        return res.status(404).send("Token invalid");
+        return res.status(404).json({ msg: "Invalid token" });
 });
 exports.getUserList = getUserList;
+const translateUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userName } = req.body;
+    try {
+        const user = yield user_1.User.findOne({
+            where: {
+                userName
+            }
+        });
+        if (user) {
+            yield traslatecheck_1.TranslateCheck.update({ translatedFlag: true }, {
+                where: {
+                    userId: user.id
+                }
+            });
+        }
+    }
+    catch (error) {
+        return res.status(404).json({ msg: "something wrong goes with translation" });
+    }
+});
+exports.translateUpdate = translateUpdate;

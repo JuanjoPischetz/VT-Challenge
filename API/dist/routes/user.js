@@ -8,4 +8,5 @@ router.post('/', user_controller_1.newUser);
 router.post('/login', user_controller_1.loginUser);
 router.get('/', user_controller_1.testName);
 router.get('/admin', validateToken_controller_1.validateToken, user_controller_1.getUserList);
+router.put('/', validateToken_controller_1.validateToken, user_controller_1.translateUpdate);
 exports.default = router;

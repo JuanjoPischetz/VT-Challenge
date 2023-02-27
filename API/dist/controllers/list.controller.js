@@ -8,21 +8,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.updateTask = exports.postTask = exports.getList = void 0;
 const list_1 = require("../models/list");
 const user_1 = require("../models/user");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const getList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.body;
+    const headerToken = req.headers['authorization'];
     try {
-        if (!userId)
-            return res.status(400).send('userId cant be empty');
-        else {
-            const findUser = yield user_1.User.findByPk(userId);
+        if (headerToken !== undefined) {
+            const bearerToken = headerToken.slice(7);
+            const userInfo = jsonwebtoken_1.default.decode(bearerToken);
+            const findUser = yield user_1.User.findByPk(userInfo.userId);
             if (!findUser)
                 return res.status(404).send('userId not exist in our database');
-            const getUserList = yield list_1.List.findAll({ where: { userId } });
+            const getUserList = yield list_1.List.findAll({ where: { userId: userInfo.userId } });
             return res.status(200).send(getUserList);
+        }
+        else {
+            return res.status(400).json({ msg: 'Header authorization is missing' });
         }
     }
     catch (error) {

@@ -1,5 +1,6 @@
 import express from 'express';
 import sequelize from '../db/connection';
+import cors from 'cors'
 import routesList from '../routes/list';
 import routesUser from '../routes/user';
 import { User } from './user';
@@ -32,6 +33,7 @@ class Server{
 
     middlewares(){
         this.app.use(express.json())
+        this.app.use(cors())
     }
 
     async dbConnect (){
@@ -39,8 +41,8 @@ class Server{
             User.hasMany(List);
             List.belongsTo(User);
             User.hasOne(TranslateCheck);
-            TranslateCheck.belongsto(User);
-            await sequelize.sync({force: true})
+            TranslateCheck.belongsTo(User);
+            await sequelize.sync({alter: true})
             console.log('Successfull')
         } catch (error) {
             console.log(error)

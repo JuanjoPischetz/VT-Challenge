@@ -1,17 +1,23 @@
 import { Request, Response } from "express"
 import { List } from "../models/list"
 import { User } from "../models/user"
+import jwt from "jsonwebtoken"
 
 export const getList = async (req:Request, res:Response)=>{
 
-    const {userId} = req.body
+    const headerToken = req.headers['authorization']
+
     try {
-        if (!userId) return res.status(400).send('userId cant be empty')
-        else{
-            const findUser = await User.findByPk(userId)
+        if (headerToken !== undefined){
+            const bearerToken = headerToken.slice(7);
+            const userInfo:any  = jwt.decode(bearerToken)
+            const findUser = await User.findByPk(userInfo.userId)
             if (!findUser) return res.status(404).send('userId not exist in our database')
-            const getUserList = await List.findAll({where:{userId}})
+            const getUserList = await List.findAll({where:{userId :userInfo.userId}})
             return res.status(200).send(getUserList)
+        }
+        else{
+            return res.status(400).json({msg : 'Header authorization is missing'})
         }
         
     } catch (error:any) {

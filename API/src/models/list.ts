@@ -1,5 +1,6 @@
 import sequelize from "../db/connection";
 import { DataTypes} from "sequelize"
+import { timeStamp } from "console";
 
 export const List = sequelize.define('list', {
 
@@ -18,7 +19,14 @@ export const List = sequelize.define('list', {
     show : {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+
+    done : {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
 
-})
+},
+{timeStamp : false}
+)
 
