@@ -22,4 +22,16 @@ export class ListService {
   getList( ) : Observable<List[]> {
     return this.http.get<List[]>(`${this.myAppUrl}${this.myApiUrl}`)
   }
+
+  addNewTask( list : List) :  Observable<any>{
+    return this.http.post(`${this.myAppUrl}${this.myApiUrl}`,list)
+  }
+
+  updateTask( list : List) :  Observable<any>{
+    return this.http.put(`${this.myAppUrl}${this.myApiUrl}`,list)
+  }
+
+  deleteTask(id : string) : Observable<any>{
+    return this.http.delete(`${this.myAppUrl}${this.myApiUrl}`,{body : {id}})
+  }
 }

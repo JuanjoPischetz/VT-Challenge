@@ -1,1 +1,27 @@
-<p>admin-dasboard works!</p>
+<div class="body">
+    <div class="title">
+        <p><span>Admin</span> Dashboard</p>
+    </div>
+    <div class="card">
+        <div class="usersContainer">
+            <p>Users</p>
+            <mat-list-item *ngFor="let user of users;let indice = index ">
+                <div matListItemTitle 
+                (click)="setUser(indice)"
+                class="task"
+                >{{user.userName}}</div>
+            </mat-list-item>
+        </div>
+        <div class="listContainer">
+            <p>List History</p>
+            <mat-list-item *ngFor="let task of tasks;let indice = index ">
+                <div matListItemTitle 
+                [ngClass]="task.show ? 'task' : 'taskDone'"
+                >{{task.title}}</div>
+            </mat-list-item>
+        </div>
+    </div>
+    <div class="iconContainer">
+        <img src="../../../assets/images/logout.png" alt="Log Out" class="img" (click)="logOut()" >
+    </div>
+</div>

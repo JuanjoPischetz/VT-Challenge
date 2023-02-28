@@ -33,6 +33,9 @@ export class LoginComponent {
         next : (token) =>{
           alert('Log In Successfull!')
           localStorage.setItem('token',token)
+          if(user.userName.startsWith('admin')){
+            this.router.navigate(['/admin'])
+          }else
           this.router.navigate(['/app'])
         },
         error : (event: HttpErrorResponse ) =>{

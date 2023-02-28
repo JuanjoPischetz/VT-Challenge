@@ -19,9 +19,5 @@ exports.List = connection_1.default.define('list', {
     show: {
         type: sequelize_1.DataTypes.BOOLEAN,
         defaultValue: true
-    },
-    done: {
-        type: sequelize_1.DataTypes.BOOLEAN,
-        defaultValue: true
     }
 }, { timeStamp: false });

@@ -3,10 +3,24 @@
         <p>ToDo <span>App!</span></p>
     </div>
     <div class="card">
-        <mat-form-field class="set_width">
-            <mat-label>Add a new task</mat-label>
-            <input matInput placeholder="What you want to do next?" >
-        </mat-form-field>
+        <form [formGroup]="newTaskForm" (ngSubmit)="addTask()" class="set_width">
+            <mat-form-field style="width: 100%">
+                <mat-label for="newTask">Add a new task</mat-label>
+                <input  id="newTask" formControlName="newTask" matInput 
+                placeholder="What you want to do next?"  value={{this.newTaskForm.value.newTask}}>
+            </mat-form-field>
+        </form>
+        <mat-list-item  class="set_width" *ngFor="let task of tasks; let indice = index">
+            <div class="group">
+                <div matListItemTitle (click)="toggle(indice)" 
+                    [ngClass]="task.show ? 'task' : 'taskDone'"
+                    >{{task.title}}</div>
+                <mat-icon (click)="deleteTask(indice)" >delete</mat-icon>
+            </div>
+        </mat-list-item>
     </div>
-
+    <div class="iconContainer">
+        <img src="../../../assets/images/logout.png" alt="Log Out" class="img" (click)="logOut()" >
+    </div>
 </div>
+

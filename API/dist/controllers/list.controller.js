@@ -25,7 +25,12 @@ const getList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             const findUser = yield user_1.User.findByPk(userInfo.userId);
             if (!findUser)
                 return res.status(404).send('userId not exist in our database');
-            const getUserList = yield list_1.List.findAll({ where: { userId: userInfo.userId } });
+            const getUserList = yield list_1.List.findAll({
+                where: {
+                    userId: userInfo.userId
+                },
+                order: ['createdAt']
+            });
             return res.status(200).send(getUserList);
         }
         else {
@@ -39,15 +44,19 @@ const getList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getList = getList;
 const postTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, userId } = req.body;
+    const { title } = req.body;
+    const headerToken = req.headers['authorization'];
     try {
         if (!title)
             return res.status(400).send('Content cant be empty');
-        if (!userId)
-            return res.status(400).send('Need send User Id');
-        else {
-            const newTask = yield list_1.List.create(req.body);
+        if (headerToken) {
+            const bearerToken = headerToken.slice(7);
+            const userInfo = jsonwebtoken_1.default.decode(bearerToken);
+            const newTask = yield list_1.List.create({ title, userId: userInfo.userId });
             return res.status(200).send(newTask);
+        }
+        else {
+            return res.status(401).send('Unhautorized');
         }
     }
     catch (error) {
@@ -57,16 +66,14 @@ const postTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.postTask = postTask;
 const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, title } = req.body;
+    const { id, show } = req.body;
     try {
-        if (!title)
-            return res.status(400).send('Content cant be empty');
-        yield list_1.List.update({ title }, {
+        yield list_1.List.update({ show }, {
             where: {
                 id
             }
         });
-        return res.status(200).json({ title, id });
+        return res.status(200).json({ show, id });
     }
     catch (error) {
         console.log(error.message);

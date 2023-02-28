@@ -19,11 +19,6 @@ export const List = sequelize.define('list', {
     show : {
         type: DataTypes.BOOLEAN,
         defaultValue: true
-    },
-
-    done : {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
     }
 
 },

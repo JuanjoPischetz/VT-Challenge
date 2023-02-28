@@ -1,7 +1,8 @@
 export interface List {
 
-    title: string;
+    title?: string;
     id?: string;
     show?: boolean;
+    userId?: string;
 
 }

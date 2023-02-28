@@ -88,15 +88,19 @@ export const getUserList = async  (req:Request,res:Response)=>{
         const roleCheck:any  = jwt.decode(bearerToken)
         if(roleCheck.role === "admin"){
             try {  
-                const userList  = await User.findAll({include : [{
-                    model:List,
-                    attributes: ["title"]
-                },
-                {
+                const userList  = await User.findAll({
+                    include : [{
+                        model:List,
+                        attributes: ["title","show"]
+                    },
+                    {
                     model: TranslateCheck,
                     attributes:["translatedFlag"]
-                }
-                ]});
+                    }
+                ]
+                },
+                
+                );
                 if (userList.length !== 0){
                     return res.status(200).send(userList)
                 }

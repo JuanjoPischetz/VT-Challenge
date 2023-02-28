@@ -13,6 +13,7 @@
     flex-direction: row;
     font-size: 70px;
     font-weight: 500;
+    color: white;
 }
 
 .title span{
@@ -30,9 +31,53 @@
     box-shadow: 2px 2px 10px black;
     margin-top: 32px;
     width: 95%;
-    padding: 16px 8px 16px 8px;
+    padding: 32px 8px 32px 8px;
 }
 
 .set_width{
     width: 90%;
+    
+}
+
+.group{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    background-color: #4a4a4a;
+    margin: 2px 0 4px 0;
+    border-radius: 2px;
+}
+
+.task{
+    font-size: medium;
+    cursor: pointer;
+    max-width: 280px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.taskDone{
+    font-size: medium;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-decoration: line-through;
+    text-decoration-color: #9c27b0;
+    text-decoration-thickness: 2px;
+    max-width: 280px;
+}
+
+.iconContainer{
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.img{
+    filter: invert(1);
+    object-fit: cover;
+    width: 7%;
 }

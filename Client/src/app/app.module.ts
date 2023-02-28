@@ -21,6 +21,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { AddTokenInterceptor } from './utils/add-token.interceptor';
 import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import {MatListModule} from '@angular/material/list';
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatListModule
+    MatListModule,
+    MatIconModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AddTokenInterceptor, multi:true }

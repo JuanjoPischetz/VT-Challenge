@@ -94,15 +94,17 @@ const getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const roleCheck = jsonwebtoken_1.default.decode(bearerToken);
         if (roleCheck.role === "admin") {
             try {
-                const userList = yield user_1.User.findAll({ include: [{
+                const userList = yield user_1.User.findAll({
+                    include: [{
                             model: list_1.List,
-                            attributes: ["title"]
+                            attributes: ["title", "show"]
                         },
                         {
                             model: traslatecheck_1.TranslateCheck,
                             attributes: ["translatedFlag"]
                         }
-                    ] });
+                    ]
+                });
                 if (userList.length !== 0) {
                     return res.status(200).send(userList);
                 }
