@@ -1,2 +1,4 @@
 /node_modules
 .env
+app.standard.yaml
+app.yaml
